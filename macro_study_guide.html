@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개방경제 거시경제학 — Obstfeld/Rogoff 강의노트</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    tags: 'ams'
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #faf8f3;
+    --ink: #1a1208;
+    --ink-light: #4a3f2f;
+    --ink-faint: #8a7a65;
+    --accent: #8b3a0f;
+    --accent-soft: #c4622a;
+    --accent-bg: #fdf2e9;
+    --border: #d9cfc0;
+    --border-light: #ede8df;
+    --sidebar-bg: #f0ece3;
+    --highlight: #fff3cd;
+    --code-bg: #f5f0e8;
+    --chapter-bar: #2c1f0e;
+    --width-page: 794px;
+    --serif: 'Noto Serif KR', 'Libre Baskerville', Georgia, serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  [data-theme="dark"] {
+    --paper: #18140e;
+    --ink: #f0ead8;
+    --ink-light: #c8bda8;
+    --ink-faint: #7a6e5e;
+    --accent: #e8845a;
+    --accent-soft: #d06535;
+    --accent-bg: #2a1a0e;
+    --border: #3a3228;
+    --border-light: #2a2420;
+    --sidebar-bg: #1e1a14;
+    --highlight: #2a2208;
+    --code-bg: #201c16;
+    --chapter-bar: #0e0c08;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--serif);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.8;
+    font-size: 15px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 24px 0;
+    transition: background 0.3s;
+  }
+  .sidebar-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 0 20px 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .nav-item {
+    display: block;
+    padding: 7px 20px;
+    font-size: 13px;
+    color: var(--ink-light);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+    line-height: 1.4;
+  }
+  .nav-item:hover { color: var(--accent); border-left-color: var(--accent-soft); background: var(--accent-bg); }
+  .nav-item.chapter { font-weight: 700; color: var(--ink); font-size: 13px; margin-top: 8px; }
+  .nav-item.sub { padding-left: 32px; font-size: 12px; }
+
+  .main {
+    flex: 1;
+    max-width: var(--width-page);
+    margin: 0 auto;
+    padding: 48px 60px;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    border-bottom: 3px solid var(--chapter-bar);
+    padding-bottom: 28px;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+  }
+  .subject-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    font-family: var(--mono);
+  }
+  .page-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .page-subtitle { font-size: 14px; color: var(--ink-faint); font-style: italic; }
+
+  /* ── THEME TOGGLE ── */
+  .controls {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  .btn-toggle {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: all 0.2s;
+  }
+  .btn-toggle:hover { background: var(--accent); color: white; }
+
+  /* ── CHAPTER / SECTION ── */
+  .chapter-block {
+    margin-bottom: 56px;
+  }
+  .chapter-heading {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-style: normal;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+  }
+  h2.section-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+  h3.subsection-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 28px 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+  }
+  h4.mini-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-soft);
+    margin: 20px 0 8px;
+    font-style: italic;
+  }
+  p { margin-bottom: 14px; line-height: 1.85; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-left: 4px solid;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .callout.key {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+  }
+  .callout.note {
+    background: var(--highlight);
+    border-color: #c8a000;
+  }
+  .callout.formula {
+    background: var(--code-bg);
+    border-color: var(--border);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .callout-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  /* ── MATH BLOCKS ── */
+  .math-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 18px 24px;
+    margin: 18px 0;
+    overflow-x: auto;
+    text-align: center;
+  }
+  .math-block .MathJax { font-size: 1.05em !important; }
+
+  /* ── CONDITION TABLE ── */
+  .condition-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 18px 0;
+    font-size: 13.5px;
+  }
+  .cg-cell {
+    background: var(--paper);
+    padding: 12px 16px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .cg-cell.header {
+    background: var(--chapter-bar);
+    color: #f0ead8;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+  [data-theme="dark"] .cg-cell.header { background: #0a0806; }
+
+  /* ── TWO COLUMNS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+  .two-col .callout { margin: 0; }
+
+  /* ── STEP INDICATOR ── */
+  .steps { margin: 16px 0; }
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .step-num {
+    min-width: 28px; height: 28px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: var(--mono);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-body { font-size: 14px; line-height: 1.75; padding-top: 3px; }
+  .step-body strong { color: var(--accent); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* ── INLINE CODE ── */
+  code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--code-bg);
+    border: 1px solid var(--border-light);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* ── GITHUB SECTION ── */
+  .github-section {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin: 32px 0;
+  }
+  .github-step {
+    background: var(--paper);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+  .github-step .cmd {
+    display: block;
+    background: var(--chapter-bar);
+    color: #a8e6a8;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  [data-theme="dark"] .github-step .cmd { background: #0a0806; }
+
+  /* ── PRINT ── */
+  @media print {
+    .sidebar, .controls { display: none; }
+    .main { max-width: 100%; padding: 0; }
+    body { font-size: 12px; }
+    .math-block { page-break-inside: avoid; }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .main { padding: 32px 24px; }
+    .two-col { grid-template-columns: 1fr; }
+    .condition-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .chapter-block { opacity: 0; transform: translateY(16px); animation: fadeUp 0.5s ease forwards; }
+  .chapter-block:nth-child(1) { animation-delay: 0.05s; }
+  .chapter-block:nth-child(2) { animation-delay: 0.12s; }
+  .chapter-block:nth-child(3) { animation-delay: 0.2s; }
+  .chapter-block:nth-child(4) { animation-delay: 0.28s; }
+  .chapter-block:nth-child(5) { animation-delay: 0.36s; }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* ── TOC (mobile) ── */
+  .toc-mobile { display: none; }
+  @media (max-width: 860px) {
+    .toc-mobile { display: block; background: var(--sidebar-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px 20px; margin-bottom: 28px; font-size: 13px; }
+    .toc-mobile summary { cursor: pointer; font-weight: 700; }
+    .toc-mobile a { display: block; padding: 4px 0; color: var(--ink-light); text-decoration: none; }
+  }
+
+  /* tag badge */
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 10px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .badge.blue { background: #2a6da8; }
+  .badge.green { background: #2a7a3a; }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="btn-toggle" onclick="toggleTheme()">◐ 다크모드</button>
+  <button class="btn-toggle" onclick="window.print()">🖨 인쇄</button>
+</div>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-title">목차 — Table of Contents</div>
+  <a class="nav-item chapter" href="#ch1">Chapter 1</a>
+  <a class="nav-item sub" href="#s1-saving">2기간 모형 (저축)</a>
+  <a class="nav-item sub" href="#s1-euler">오일러 방정식</a>
+  <a class="nav-item sub" href="#s1-ca">경상수지</a>
+  <a class="nav-item sub" href="#s1-invest">투자 포함 모형</a>
+  <a class="nav-item sub" href="#s1-small">소국개방 vs. 2국 모형</a>
+  <a class="nav-item chapter" href="#ch1b">무한 수평선 모형</a>
+  <a class="nav-item sub" href="#s1-infinite">무한기간 모형</a>
+  <a class="nav-item sub" href="#s1-pih">항상소득가설 (PIH)</a>
+  <a class="nav-item sub" href="#s1-beta">β(1+r)=1 이유</a>
+  <a class="nav-item chapter" href="#ch2">Chapter 2</a>
+  <a class="nav-item sub" href="#s2-tobin">토빈 q 모형</a>
+  <a class="nav-item sub" href="#s2-foc">1차 조건 분석</a>
+  <a class="nav-item sub" href="#s2-ss">정상상태 & 선형화</a>
+  <a class="nav-item sub" href="#s2-phase">위상도 분석</a>
+  <a class="nav-item sub" href="#s2-perm">영구적 충격</a>
+  <a class="nav-item sub" href="#s2-temp">일시적 충격</a>
+  <a class="nav-item chapter" href="#ch3">확률적 모형</a>
+  <a class="nav-item sub" href="#s3-lq">선형이차 모형</a>
+  <a class="nav-item sub" href="#s3-ar1">AR(1) 소득과 경상수지</a>
+  <a class="nav-item chapter" href="#ch4">DSGE</a>
+  <a class="nav-item sub" href="#s4-dsge">DSGE 모형 개요</a>
+  <a class="nav-item sub" href="#s4-gensys">gensys.m 풀이</a>
+  <a class="nav-item chapter" href="#github">GitHub 사용법</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<details class="toc-mobile">
+  <summary>📋 목차 펼치기</summary>
+  <a href="#ch1">Ch1: 2기간 저축 모형</a>
+  <a href="#s1-invest">투자 포함 모형</a>
+  <a href="#ch1b">무한 수평선 모형</a>
+  <a href="#ch2">Ch2: 토빈 q</a>
+  <a href="#s2-phase">위상도</a>
+  <a href="#ch3">확률적 모형</a>
+  <a href="#ch4">DSGE</a>
+  <a href="#github">GitHub 사용법</a>
+</details>
+
+<header class="page-header">
+  <div class="subject-tag">OPEN ECONOMY MACROECONOMICS · OBSTFELD / ROGOFF</div>
+  <h1 class="page-title">개방경제 거시경제학<br>강의노트 완전 정리</h1>
+  <div class="page-subtitle">2기간 모형 → 무한수평선 → 토빈 q → DSGE까지, 수식과 직관을 함께</div>
+</header>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 1 — 저축 결정 (투자 없음)
+════════════════════════════════════════ -->
+<div class="chapter-block" id="ch1">
+  <div class="chapter-heading">Chapter 1</div>
+  <h2 class="section-title" id="s1-saving">2기간 모형 — 투자 없이 저축만 결정</h2>
+
+  <p>이 모형은 가장 단순화된 국제거시경제 모형으로, 소비자가 <strong>두 기간(period 1, 2)</strong>에 걸쳐 소비를 어떻게 배분할지 결정하는 문제입니다. 투자는 없고 <em>저축 결정</em>만 존재합니다.</p>
+
+  <h3 class="subsection-title" id="s1-euler">효용 극대화 문제</h3>
+
+  <p><strong>목적함수</strong>: 시간분리형(time-separable) 효용을 극대화합니다.</p>
+
+  <div class="math-block">$$\max \; u(c_1) + \beta \, u(c_2)$$</div>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 핵심 가정</span>
+    <ul style="padding-left:18px; margin:0; line-height:2;">
+      <li>$\beta$ : 외생적(exogenous) 시간할인인자 — 미래 소비를 얼마나 중시하는가</li>
+      <li>$u' > 0$ (한계효용 양수), $u'' < 0$ (한계효용 체감), $u(0)=0$, $u'(0)=\infty$</li>
+      <li>마지막 조건 $u'(0)=\infty$ 는 소비가 0이 되는 것을 막아줌 (내부해 보장)</li>
+    </ul>
+  </div>
+
+  <p><strong>예산제약</strong>: 두 기간의 현재가치 소비 합 = 두 기간의 현재가치 소득 합</p>
+
+  <div class="math-block">$$c_1 + \frac{c_2}{1+r} = y_1 + \frac{y_2}{1+r}$$</div>
+
+  <p>이를 라그랑지안으로 풀면 <strong>오일러 방정식(Euler Equation)</strong>을 얻습니다:</p>
+
+  <div class="math-block">$$u'(c_1) = \beta(1+r)\, u'(c_2)$$</div>
+
+  <div class="callout note">
+    <span class="callout-label">💡 직관적 해석</span>
+    오일러 방정식은 <em>최적성의 핵심 조건</em>입니다. "오늘 소비를 1단위 줄여서 저축하면, 내일 $(1+r)$을 받는다. 그 미래 소비의 효용($\beta(1+r)u'(c_2)$)이 오늘 포기한 효용($u'(c_1)$)과 같아야 최적." 더 줄여도, 더 늘려도 이득이 없는 균형점입니다.
+  </div>
+
+  <h3 class="subsection-title">소비평탄화 vs. 소비기울이기</h3>
+
+  <div class="condition-grid">
+    <div class="cg-cell header">조건</div>
+    <div class="cg-cell header">결과</div>
+    <div class="cg-cell header">이름</div>
+    <div class="cg-cell">$\beta = \dfrac{1}{1+r}$</div>
+    <div class="cg-cell">$c_1 = c_2 = \dfrac{y_1(1+r)+y_2}{2+r}$</div>
+    <div class="cg-cell"><strong>소비평탄화</strong><br><small>Consumption Smoothing</small></div>
+    <div class="cg-cell">$\beta > \dfrac{1}{1+r}$</div>
+    <div class="cg-cell">$c_1 < c_2$</div>
+    <div class="cg-cell"><strong>소비기울이기</strong><br><small>Consumption Tilting</small><br>(미래 중시 → 지금 덜 씀)</div>
+  </div>
+
+  <div class="callout note">
+    <span class="callout-label">📌 소비평탄화의 의미</span>
+    $\beta = \frac{1}{1+r}$ 이면 "참을성(인내심)"과 "시장이자율"이 정확히 균형을 이룹니다. 이때 소비자는 두 기간에 걸쳐 소비를 <em>균등하게</em> 배분합니다. 이것이 바로 거시경제학의 핵심 결과인 <strong>소비평탄화(Consumption Smoothing)</strong>입니다.
+  </div>
+
+  <h3 class="subsection-title" id="s1-ca">경상수지 (Current Account)</h3>
+
+  <p><strong>순해외자산(Net Foreign Assets)</strong>: $B_{t+1}$ = $t$기 말의 순해외자산</p>
+
+  <div class="math-block">$$CA_t = B_{t+1} - B_t = Y_t + r_t B_t - C_t$$</div>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 경상수지 = GNP - 소비</span>
+    $CA_t = \underbrace{Y_t}_{\text{GDP}} + \underbrace{r_t B_t}_{\text{해외요소소득}} - C_t = \underbrace{GNP}_{\text{국민소득}} - C_t$
+  </div>
+
+  <p>자산축적 방정식 (고정이자율 가정):</p>
+  <div class="math-block">$$B_{t+1} = Y_t + (1+r)B_t - C_t$$</div>
+
+  <p>2기간 경제에서 $B_1 = B_3 = 0$ 이므로:</p>
+
+  <div class="two-col">
+    <div class="callout formula">
+      <span class="callout-label">1기 경상수지</span>
+      $CA_1 = B_2 - B_1 = Y_1 + rB_1 - C_1$<br>
+      $\Rightarrow CA_1 = B_2 = Y_1 - C_1$
+    </div>
+    <div class="callout formula">
+      <span class="callout-label">2기 경상수지</span>
+      $CA_2 = B_3 - B_2 = Y_2 + rB_2 - C_2$<br>
+      $\Rightarrow CA_2 = -B_2 = TB_2 + rB_2$
+    </div>
+  </div>
+
+  <p>따라서 <strong>1기의 경상수지 = 2기의 저축</strong>이며, 저축 결정은 이자율에 의존합니다.</p>
+</div>
+
+<!-- ════════════════════════════════════════
+     투자 포함 모형
+════════════════════════════════════════ -->
+<div class="chapter-block" id="s1-invest">
+  <div class="chapter-heading">Chapter 1 — 확장</div>
+  <h2 class="section-title">2기간 모형 — 투자 포함 (저축+투자 동시 결정)</h2>
+
+  <p>이제 저축 결정뿐 아니라 <strong>투자 결정</strong>도 내생화합니다. 생산함수 $Y = F(K)$를 도입하고, 노동 선택은 없습니다.</p>
+
+  <h3 class="subsection-title">기본 구조</h3>
+
+  <div class="math-block">
+    $$Y = F(K), \quad I_1 = K_2 - K_1$$
+    $$CA_1 = B_2 - B_1 = Y_1 - C_1 - I_1 = TB_1 \quad (B_1 = 0)$$
+    $$C_2 = Y_2 + (1+r)B_2 + K_2$$
+  </div>
+
+  <p>통합 예산제약: $K_3 = 0$ 이므로 $I_2 = K_3 - K_2 = -K_2$</p>
+
+  <div class="math-block">$$C_1 + \frac{C_2}{1+r} = (Y_1 - I_1) + \frac{Y_2 + K_2}{1+r}$$</div>
+
+  <h3 class="subsection-title">최적화 문제</h3>
+
+  <div class="math-block">$$\max_{c_1, I_1} \; u(C_1) + \beta\, u(C_2)$$</div>
+
+  <p>라그랑지안을 구성하고 1차조건을 구하면:</p>
+
+  <div class="two-col">
+    <div class="callout formula">
+      <span class="callout-label">소비 조건 ($\partial L / \partial C_1 = 0$)</span>
+      $$u'(C_1) = \beta(1+r)\,u'(C_2)$$
+      (오일러 방정식 — 저축 결정)
+    </div>
+    <div class="callout formula">
+      <span class="callout-label">투자 조건 ($\partial L / \partial I_1 = 0$)</span>
+      $$F'(K_2) = r$$
+      (자본의 한계생산 = 이자율)
+    </div>
+  </div>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 투자 조건의 직관</span>
+    투자를 1단위 늘리면 $K_2$가 증가하고, 2기에 $F'(K_2)$만큼 추가 생산됩니다. 이것의 현재가치가 투자비용 1과 같아져야 합니다. 즉, <strong>자본의 한계생산물 = 이자율</strong>에서 최적 투자가 결정됩니다.
+  </div>
+
+  <h3 class="subsection-title" id="s1-small">소국개방경제 vs. 2국 모형</h3>
+
+  <div class="two-col">
+    <div class="callout key">
+      <span class="callout-label">🌍 소국개방경제 (Small Open Economy)</span>
+      이자율 $r$이 <strong>외생적으로 주어짐</strong>. 세계이자율에 아무런 영향을 미치지 못하는 작은 나라. 대부분의 신흥국 모형에 사용.
+    </div>
+    <div class="callout note">
+      <span class="callout-label">🌐 2국 모형 (Two-Country Model)</span>
+      이자율 $r$이 <strong>시장청산조건</strong>으로 내생적 결정:
+      $$B_2 + B_2^* = 0$$
+      두 나라 자산의 합 = 0 (대칭적 균형)
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     무한 수평선 모형
+════════════════════════════════════════ -->
+<div class="chapter-block" id="ch1b">
+  <div class="chapter-heading">Chapter 1 — 무한 수평선</div>
+  <h2 class="section-title" id="s1-infinite">유한/무한 수평선 모형</h2>
+
+  <p>현실적으로 경제주체는 매우 긴 기간에 걸쳐 의사결정을 합니다. $T \to \infty$로 확장하는 것이 무한 수평선 모형입니다.</p>
+
+  <div class="math-block">$$\max \sum_{s=t}^{T} \beta^{s-t} u(C_s)$$</div>
+
+  <p>제약조건: $B_{s+1} - B_s = Y_s + r B_s - C_s$ (매 기간)</p>
+
+  <p>라그랑지안으로 풀면, 오일러 방정식은 모든 기간에 성립:</p>
+
+  <div class="math-block">$$u'(C_s) = \beta(1+r)\,u'(C_{s+1}), \quad \forall s = t, \ldots, T$$</div>
+
+  <h3 class="subsection-title">경계 조건 (Terminal Conditions)</h3>
+
+  <div class="two-col">
+    <div class="callout formula">
+      <span class="callout-label">유한 수평선</span>
+      $$B_{T+1} = 0$$
+      마지막 기에 자산을 모두 소비하고 빚도 없어야 함
+    </div>
+    <div class="callout formula">
+      <span class="callout-label">무한 수평선 — 횡단성조건</span>
+      $$\lim_{T\to\infty} \frac{B_{T+1}}{(1+r)^T} = 0$$
+      자산이 무한히 쌓이거나, 폰지(Ponzi) 게임 불가
+    </div>
+  </div>
+
+  <div class="callout note">
+    <span class="callout-label">⚠️ 횡단성조건(Transversality Condition)이란?</span>
+    무한히 먼 미래에 자산의 현재가치가 0이 되어야 한다는 조건입니다. 만약 이 조건이 없다면, 소비자는 "영원히 빌리고 절대 갚지 않는" 폰지 전략을 쓸 수 있습니다. 현실에서는 채권자가 이를 허용하지 않으므로 이 조건이 부과됩니다.
+  </div>
+
+  <h3 class="subsection-title" id="s1-pih">항상소득가설 (Permanent Income Hypothesis)</h3>
+
+  <p>$\beta(1+r) = 1$ 을 가정하면, 오일러 방정식에서:</p>
+  <div class="math-block">$$u'(C_s) = u'(C_{s+1}) \quad \Rightarrow \quad C_t = C_{t+1} = \cdots$$</div>
+  <p>소비는 <strong>완전히 평탄</strong>합니다. 기간간예산제약에 대입하면:</p>
+
+  <div class="math-block">$$\frac{r}{1+r} \sum_{s=t}^{\infty} \left(\frac{1}{1+r}\right)^{s-t} C_t = rB_t + \frac{r}{1+r}\sum_{s=t}^{\infty}\left(\frac{1}{1+r}\right)^{s-t} Y_s$$</div>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 항상소득가설 (PIH)</span>
+    $$C_t = r \cdot B_t + r \cdot \underbrace{\frac{1}{1+r}\sum_{s=t}^{\infty}\left(\frac{1}{1+r}\right)^{s-t} Y_s}_{\text{인적자본 (Human Wealth)}} = r \cdot W_t$$
+    소비 = 이자율 × 총 부(금융자산 + 인적자본). 소비자는 <strong>총 생애소득의 이자분</strong>만큼 매기 소비합니다.
+  </div>
+
+  <p>경상수지와 무역수지를 다시 쓰면:</p>
+  <div class="math-block">$$-rB_t = \sum_{s=t}^{\infty}\left(\frac{1}{1+r}\right)^{s-t} (Y_s - C_s) = \sum_{s=t}^{\infty}\left(\frac{1}{1+r}\right)^{s-t} TB_s$$</div>
+
+  <h3 class="subsection-title" id="s1-beta">왜 무한 수평선에서 $\beta(1+r) = 1$ 이어야 하는가?</h3>
+
+  <div class="callout note">
+    <span class="callout-label">📊 직관</span>
+    <p style="margin:0">
+    그래프(강의노트 4페이지)에서 볼 수 있듯이:
+    </p>
+    <ul style="padding-left:18px; margin:6px 0 0; line-height:2;">
+      <li>$\beta(1+r) > 1$: 소비가 시간이 지날수록 <em>계속 증가</em> → 초기에 너무 적게 소비, 무한히 쌓임 → 불안정</li>
+      <li>$\beta(1+r) = 1$: 소비가 <em>완전히 일정</em> → 유한한 합을 가짐 → 안정적 해 존재</li>
+      <li>$\beta(1+r) < 1$: 소비가 시간이 지날수록 <em>계속 감소</em> → $C \to 0$ → 예산제약의 현재가치가 무한대</li>
+    </ul>
+    무한 수평선에서 안정적 균형이 존재하려면 반드시 $\beta(1+r) = 1$ 이어야 합니다.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════
+     CHAPTER 2 — 토빈 q
+════════════════════════════════════════ -->
+<div class="chapter-block" id="ch2">
+  <div class="chapter-heading">Chapter 2</div>
+  <h2 class="section-title" id="s2-tobin">기업 문제 — 토빈 q 모형</h2>
+
+  <p>Chapter 2는 기업의 투자 결정에 집중합니다. <strong>자본설치비용(adjustment cost)</strong>을 도입함으로써 현실적인 투자 동학을 모형화합니다.</p>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 토빈 q (Tobin's q)</span>
+    <p style="margin:0">자본 1단위의 <strong>시장가치</strong>와 <strong>대체비용(replacement cost)</strong>의 비율:</p>
+    <ul style="padding-left:18px; margin:6px 0 0; line-height:2;">
+      <li>$q > 1$: 자본의 시장가치 > 비용 → <strong>투자 확대</strong> (더 사는 게 이득)</li>
+      <li>$q < 1$: 자본의 시장가치 < 비용 → <strong>투자 축소</strong> (파는 게 이득)</li>
+      <li>$q = 1$: 균형 (정상상태)</li>
+    </ul>
+  </div>
+
+  <h3 class="subsection-title">기업의 최적화 문제</h3>
+
+  <p>자본설치비용: $\frac{\chi}{2}\left(\frac{I_s}{K_s}\right)^2 K_s$ (투자율의 2차 비용)</p>
+
+  <div class="math-block">$$\max \sum_{s=t}^{\infty} \frac{1}{(1+r)^{s-t}} \left[ Y_s - w L_s - I_s - \frac{\chi}{2}\left(\frac{I_s}{K_s}\right)^2 K_s \right]$$</div>
+  <p>제약조건: $K_{t+1} = K_t + I_t$</p>
+
+  <h3 class="subsection-title" id="s2-foc">1차 조건 분석</h3>
+
+  <div class="two-col">
+    <div class="callout formula">
+      <span class="callout-label">투자에 대한 FOC ($\partial L / \partial I$)</span>
+      $$q_s = 1 + \chi \frac{I_s}{K_s}$$
+      $\Leftrightarrow$ 투자율 $= \dfrac{q-1}{\chi}$
+    </div>
+    <div class="callout formula">
+      <span class="callout-label">자본에 대한 FOC ($\partial L / \partial K$)</span>
+      $$q_t = \frac{1}{1+r}\left[AF_K(K_{t+1}, L_{t+1}) + q_{t+1}\left(1+\frac{\chi}{2}\left(\frac{I}{K}\right)^2\right)\right]$$
+    </div>
+  </div>
+
+  <div class="callout note">
+    <span class="callout-label">💡 투자 FOC의 직관</span>
+    자본설치비용이 없다면($\chi=0$), $q=1$이 항상 성립하고 투자량은 $F'(K)=r$로 결정됩니다. 설치비용이 있으면, 기업은 천천히 조정합니다 — 이것이 현실적인 투자의 점진적 반응을 설명합니다.
+  </div>
+
+  <h3 class="subsection-title" id="s2-ss">정상상태 & 선형화</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><strong>정상상태 계산:</strong> $\Delta K_{t+1} = 0$, $\Delta q_{t+1} = 0$ 으로 놓고 $(\bar{K}, \bar{q})$ 계산. 정상상태에서 $\bar{q} = 1$, $AF'(\bar{K}) = r$.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><strong>선형화:</strong> 정상상태 근방에서 1차 테일러 전개: $G(x,y) \approx G(\bar{x},\bar{y}) + G_x(\bar{x},\bar{y})(x-\bar{x}) + G_y(\bar{x},\bar{y})(y-\bar{y})$</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><strong>행렬 형식:</strong>
+        $$\begin{bmatrix} \Delta K_{t+1} \\ \Delta q_{t+1} \end{bmatrix} = \underbrace{\begin{bmatrix} 0 & \bar{K}/\chi \\ -AF_{KK} & r - A\bar{K}F_{KK}/\chi \end{bmatrix}}_{\text{계수 행렬}} \begin{bmatrix} K_t - \bar{K} \\ q_t - 1 \end{bmatrix}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 안장경로 균형 (Saddle Path Equilibrium)</span>
+    이 $2 \times 2$ 선형차분방정식 시스템은 항상 <strong>하나의 안정근 + 하나의 불안정근</strong>을 가집니다. 경제적으로 의미 있는 해는 안정적 경로(stable manifold = saddle path) 위의 해입니다. 이를 <strong>조르당 분해(Jordan Decomposition)</strong>로 수학적으로 구합니다.
+  </div>
+
+  <div class="callout note">
+    <span class="callout-label">📌 상태변수 vs. 통제변수</span>
+    <ul style="padding-left:18px; margin:0; line-height:2;">
+      <li><strong>상태변수(State variable)</strong>: $K_t$ — 과거에 결정되어 <em>점프 불가</em></li>
+      <li><strong>통제변수(Control/jump variable)</strong>: $q_t$ — 현재 기대를 반영해 <em>즉각 점프 가능</em></li>
+    </ul>
+    충격이 발생하면 $K_t$는 서서히 조정되지만, $q_t$는 즉각 새로운 안장경로 위로 점프합니다.
+  </div>
+</div>
+
+<!-- 위상도 -->
+<div class="chapter-block" id="s2-phase">
+  <div class="chapter-heading">Chapter 2 — 위상도</div>
+  <h2 class="section-title">위상도 분석 (Phase Diagram)</h2>
+
+  <h3 class="subsection-title">$\Delta K_{t+1} = 0$ 궤적</h3>
+  <p>$\Delta K_{t+1} = 0 \Rightarrow q_t = 1$ (수평선). 이 선 위에서 자본축적이 없음.</p>
+  <ul style="padding-left:20px; line-height:2; font-size:14px;">
+    <li>$q > 1$: 투자 양수 → $K$ 증가 → <strong>오른쪽 이동</strong></li>
+    <li>$q < 1$: 투자 음수 → $K$ 감소 → <strong>왼쪽 이동</strong></li>
+  </ul>
+
+  <h3 class="subsection-title">$\Delta q_{t+1} = 0$ 궤적</h3>
+  <p>우하향하는 곡선. 이 선 위에서 $q$ 변화 없음.</p>
+  <ul style="padding-left:20px; line-height:2; font-size:14px;">
+    <li>궤적 위쪽: $q$ 증가 → <strong>위쪽 이동</strong></li>
+    <li>궤적 아래쪽: $q$ 감소 → <strong>아래쪽 이동</strong></li>
+  </ul>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 두 궤적의 교점 = 정상상태</span>
+    $(\bar{K}, \bar{q}=1)$. 초기 자본 $K_0$가 주어지면, 경제는 정상상태로 수렴하는 <strong>안장경로(saddle path)</strong>를 따라 움직입니다. 이 경로 위에 올라타기 위해 $q_0$가 즉각 조정됩니다.
+  </div>
+
+  <h3 class="subsection-title" id="s2-perm">영구적 생산성 충격 ($A$ 영구 상승)</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">①</div>
+      <div class="step-body">$A$가 영구적으로 상승 → $\Delta q = 0$ 궤적이 위/오른쪽으로 이동 → 새 정상상태 $b$의 $\bar{K}(b) > \bar{K}(a)$</div>
+    </div>
+    <div class="step">
+      <div class="step-num">②</div>
+      <div class="step-body">충격 발생 즉시 $q_t$가 <strong>점프 상승</strong> (새 안장경로 위로 이동)</div>
+    </div>
+    <div class="step">
+      <div class="step-num">③</div>
+      <div class="step-body">이후 $K_t$는 서서히 증가, $q_t$는 1로 수렴</div>
+    </div>
+  </div>
+
+  <div class="callout formula">
+    <span class="callout-label">충격반응함수 (IRF) — 영구 충격</span>
+    <ul style="padding-left:18px; margin:0; line-height:2.2;">
+      <li>$A$: $t=0$부터 영구적으로 높은 수준으로 유지</li>
+      <li>$q_t$: $t=0$에 즉각 점프 상승 후 1로 단조 수렴</li>
+      <li>$K_t$: $\bar{K}(a)$에서 $\bar{K}(b)$로 점진적 증가</li>
+    </ul>
+  </div>
+
+  <h3 class="subsection-title" id="s2-temp">일시적 생산성 충격 ($A$ 일시 상승)</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">①</div>
+      <div class="step-body">$A$가 일시적 상승 → 충격 발생 시 $q_t$가 <em>작게만</em> 점프 상승 (충격이 사라질 때 원래 안장경로로 돌아와야 하기 때문)</div>
+    </div>
+    <div class="step">
+      <div class="step-num">②</div>
+      <div class="step-body">$K_t$가 잠시 증가 후 $A$가 원래대로 돌아오면 $K_t$도 감소</div>
+    </div>
+    <div class="step">
+      <div class="step-num">③</div>
+      <div class="step-body">최종적으로 원래 정상상태 $a$로 복귀</div>
+    </div>
+  </div>
+
+  <div class="callout note">
+    <span class="callout-label">💡 영구 vs. 일시적 충격의 핵심 차이</span>
+    <ul style="padding-left:18px; margin:0; line-height:2;">
+      <li><strong>영구적 충격</strong>: $q$가 크게 점프 → 자본이 새 정상상태까지 증가 후 그대로 유지</li>
+      <li><strong>일시적 충격</strong>: $q$가 적게 점프 → 자본이 잠시 증가했다가 원래대로 복귀, $q$는 1 아래로도 내려감</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════
+     확률적 모형
+════════════════════════════════════════ -->
+<div class="chapter-block" id="ch3">
+  <div class="chapter-heading">확률적 모형 (Stochastic Model)</div>
+  <h2 class="section-title" id="s3-lq">선형이차 모형 (Linear-Quadratic Model)</h2>
+
+  <p>현실 경제는 불확실성이 있습니다. 합리적 기대(Rational Expectations)를 가정하고 기대효용을 극대화합니다.</p>
+
+  <div class="math-block">$$\max \; E_t \sum_{s=t}^{\infty} \beta^{s-t} u(C_s)$$</div>
+
+  <p>제약조건: $B_{t+1} = Y_t + (1+r)B_t - C_t - I_t - G_t$</p>
+
+  <p>오일러 방정식 (확률적 버전):</p>
+  <div class="math-block">$$u'(C_t) = \beta(1+r)\, E_t[u'(C_{t+1})]$$</div>
+
+  <h3 class="subsection-title">이차 효용함수 가정</h3>
+
+  <p>$u(C) = aC - \frac{1}{2}C^2$ 로 가정하면: $u'(C) = a - C$</p>
+
+  <p>$\beta(1+r) = 1$ 하에서:</p>
+  <div class="math-block">$$a - C_t = E_t[a - C_{t+1}] \quad \Rightarrow \quad C_t = E_t C_{t+1}$$</div>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 확실성 등가 원칙 (Certainty Equivalence Principle)</span>
+    이차 효용함수 + 선형 예산제약 하에서, 최적 소비 결정은 <strong>불확실성이 없는 경우와 동일</strong>합니다. 기대값만 취하고 분산은 무관합니다. 이것이 LQ(Linear-Quadratic) 모형의 강력한 결과입니다.
+  </div>
+
+  <h3 class="subsection-title" id="s3-ar1">AR(1) 소득 과정과 경상수지</h3>
+
+  <p>소득이 AR(1) 과정을 따른다고 가정합니다:</p>
+  <div class="math-block">$$Y_{t+1} - \bar{Y} = \rho(Y_t - \bar{Y}) + \varepsilon_{t+1}, \quad E_t[\varepsilon_{t+1}] = 0$$</div>
+
+  <p>여기서 $0 \leq \rho \leq 1$: 소득의 지속성(persistence) 파라미터</p>
+
+  <p>이를 PIH 공식에 대입하면, 초기 순자산 $B_t = 0$ 하에서:</p>
+
+  <div class="math-block">$$C_t = \bar{Y} + \frac{r}{r+1-\rho}(Y_t - \bar{Y})$$</div>
+
+  <p>경상수지:</p>
+  <div class="math-block">$$\frac{CA_t}{\bar{Y}} = \frac{-(1-\rho)}{(1+r-\rho)(1+r)}\varepsilon_t$$</div>
+
+  <div class="condition-grid">
+    <div class="cg-cell header">$\rho$ 값</div>
+    <div class="cg-cell header">소득 충격 성격</div>
+    <div class="cg-cell header">최적 소비/저축 반응</div>
+    <div class="cg-cell">$\rho = 1$</div>
+    <div class="cg-cell">영구적 충격 (Random Walk)</div>
+    <div class="cg-cell">소득 전부 소비, $CA = 0$ (저축 안 함)</div>
+    <div class="cg-cell">$0 < \rho < 1$</div>
+    <div class="cg-cell">일시적 충격</div>
+    <div class="cg-cell">소비 일부 증가, 나머지 저축 → $CA > 0$</div>
+    <div class="cg-cell">$\rho = 0$</div>
+    <div class="cg-cell">완전히 일시적 (i.i.d.)</div>
+    <div class="cg-cell">소득 거의 저축, 소비는 미미하게 증가</div>
+  </div>
+
+  <div class="callout note">
+    <span class="callout-label">💡 핵심 직관</span>
+    소득 충격이 <strong>영구적일수록</strong>(ρ→1) 소비가 소득만큼 증가하고 저축/경상수지는 변하지 않습니다. 충격이 <strong>일시적일수록</strong>(ρ→0) 소비는 조금만 증가하고 대부분 저축되어 경상수지가 개선됩니다. 이는 소비평탄화 동기와 일치합니다.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════
+     DSGE
+════════════════════════════════════════ -->
+<div class="chapter-block" id="ch4">
+  <div class="chapter-heading">DSGE</div>
+  <h2 class="section-title" id="s4-dsge">DSGE 모형 (Dynamic Stochastic General Equilibrium)</h2>
+
+  <p>DSGE는 현대 거시경제학의 표준 모형입니다. 저축, 투자, 노동·여가 선택을 모두 포함하고 불확실성까지 내생화합니다.</p>
+
+  <div class="callout key">
+    <span class="callout-label">🔑 DSGE 모형 확장 순서</span>
+    <div class="steps" style="margin-top:10px;">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">2기간 → 무한수평선 확장</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">결정론적(Deterministic) → 확률적(Stochastic) 확장: 합리적 기대 도입</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">저축+투자 → 노동/여가 선택 추가: $u = u(C, L)$, $Y = F(K, L)$</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">주식/채권 등 자산 보유 직접 모형화</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="subsection-title">DSGE 수치 풀이 절차</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">①</div>
+      <div class="step-body"><strong>정상상태 계산:</strong> 모든 내생변수의 비확률적 정상상태 $(\bar{C}, \bar{K}, \bar{Y}, \ldots)$ 를 비선형 방정식 시스템에서 수치적으로 풀기</div>
+    </div>
+    <div class="step">
+      <div class="step-num">②</div>
+      <div class="step-body"><strong>선형화:</strong> 정상상태 주변에서 1차 테일러 전개 → 로그편차 변수 $\hat{x}_t = \ln x_t - \ln \bar{x}$</div>
+    </div>
+    <div class="step">
+      <div class="step-num">③</div>
+      <div class="step-body"><strong>기대 제거:</strong> 조르당 분해(Jordan Decomposition) 또는 <code>gensys.m</code>을 이용해 합리적 기대 항을 제거, 결정론적 차분방정식으로 변환</div>
+    </div>
+    <div class="step">
+      <div class="step-num">④</div>
+      <div class="step-body"><strong>충격반응함수(IRF) 계산:</strong> 각 구조적 충격에 대한 내생변수의 동적 반응 시뮬레이션</div>
+    </div>
+  </div>
+
+  <h3 class="subsection-title" id="s4-gensys">소국개방 부존경제 모형 — <code>gensys.m</code></h3>
+
+  <p>Chris Sims의 <code>gensys.m</code>을 이용해 합리적 기대 모형을 수치로 풉니다. 상태벡터:</p>
+
+  <div class="math-block">$$\hat{x}_t = [\hat{c}_t, \hat{b}_t, \hat{y}_t, \hat{r}_t]^T, \quad z_t = [\varepsilon_t^y, \varepsilon_t^r]^T$$</div>
+
+  <p>모형 방정식 (로그선형화):</p>
+
+  <div class="two-col">
+    <div class="callout formula">
+      <span class="callout-label">예산제약 (1)</span>
+      $$\hat{c}_t + \hat{b}_{t+1} = \hat{c} + (1+r)\hat{b}_t + \hat{y}_t - \hat{y}$$
+    </div>
+    <div class="callout formula">
+      <span class="callout-label">오일러 방정식 (2)</span>
+      $$\hat{c}_t = \frac{1}{\sigma}\hat{r}_t + E_t\hat{c}_{t+1}$$
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="callout formula">
+      <span class="callout-label">소득 AR(1) (3)</span>
+      $$\hat{y}_{t+1} = \rho_y \hat{y}_t + \varepsilon_{t+1}^y$$
+    </div>
+    <div class="callout formula">
+      <span class="callout-label">이자율 AR(1) (4)</span>
+      $$\hat{r}_{t+1} = \rho_r \hat{r}_t + \varepsilon_{t+1}^r$$
+    </div>
+  </div>
+
+  <p>$\Gamma_0, \Gamma_1, C, \Psi, \Pi$ 행렬 형식으로 쓰면:</p>
+
+  <div class="math-block">$$\Gamma_0 \hat{x}_t = \Gamma_1 \hat{x}_{t-1} + C + \Psi z_t + \Pi \eta_t$$</div>
+
+  <p>여기서 $\eta_t$는 예측 오차(forecast error). <code>gensys.m</code>은 이 시스템을 풀어 해법 행렬 $G_1$과 충격행렬을 반환합니다:</p>
+
+  <div class="math-block">$$\hat{x}_t = G_1 \hat{x}_{t-1} + \text{impact} \cdot z_t$$</div>
+
+  <div class="callout note">
+    <span class="callout-label">💡 2국 모형으로의 확장</span>
+    소국개방경제에서는 이자율이 외생적이지만, <strong>2국 모형</strong>에서는 두 나라의 예산제약 + AR(1) 프로세스를 결합하고 시장청산조건 $B_2 + B_2^* = 0$을 추가합니다. 이자율이 내생적으로 결정됩니다.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════
+     GITHUB 가이드
+════════════════════════════════════════ -->
+<div class="chapter-block" id="github">
+  <div class="chapter-heading">부록 — 깃허브 사용법</div>
+  <h2 class="section-title">GitHub Pages로 이 파일 어디서나 보기</h2>
+
+  <p>GitHub Pages를 사용하면 이 HTML 파일을 무료로 웹에 올려 스마트폰, 태블릿, PC 어디서나 접근할 수 있습니다.</p>
+
+  <div class="github-section">
+    <h3 class="subsection-title" style="border:none;padding:0;margin:0 0 20px;">Step 1 — GitHub 계정 만들기</h3>
+
+    <div class="github-step">
+      <strong>① 사이트 접속</strong>: <code>github.com</code> 으로 이동
+    </div>
+    <div class="github-step">
+      <strong>② Sign up 클릭</strong> → 이메일, 비밀번호, 사용자명 입력 → 이메일 인증
+    </div>
+  </div>
+
+  <div class="github-section">
+    <h3 class="subsection-title" style="border:none;padding:0;margin:0 0 20px;">Step 2 — 새 저장소(Repository) 만들기</h3>
+
+    <div class="github-step">
+      <strong>① 로그인 후</strong> 우상단 <code>+</code> 버튼 → <code>New repository</code> 클릭
+    </div>
+    <div class="github-step">
+      <strong>② 저장소 설정:</strong>
+      <ul style="margin:8px 0 0; padding-left:18px; line-height:2;">
+        <li>Repository name: <code>macro-notes</code> (원하는 이름)</li>
+        <li>Public 선택 (무료 GitHub Pages는 Public만 가능)</li>
+        <li>✅ Add a README file 체크</li>
+      </ul>
+    </div>
+    <div class="github-step">
+      <strong>③</strong> <code>Create repository</code> 클릭
+    </div>
+  </div>
+
+  <div class="github-section">
+    <h3 class="subsection-title" style="border:none;padding:0;margin:0 0 20px;">Step 3 — HTML 파일 업로드</h3>
+
+    <div class="github-step">
+      <strong>① 저장소 페이지</strong>에서 <code>Add file</code> → <code>Upload files</code> 클릭
+    </div>
+    <div class="github-step">
+      <strong>② 파일 이름을 반드시 <code>index.html</code> 로 저장</strong>한 후 업로드<br>
+      <small style="color:var(--ink-faint);">⚠️ 파일명이 index.html이어야 주소가 깔끔해집니다</small>
+    </div>
+    <div class="github-step">
+      <strong>③</strong> 아래 <code>Commit changes</code> 버튼 클릭 → <code>Commit directly to the main branch</code> 선택 → <code>Commit changes</code>
+    </div>
+  </div>
+
+  <div class="github-section">
+    <h3 class="subsection-title" style="border:none;padding:0;margin:0 0 20px;">Step 4 — GitHub Pages 활성화</h3>
+
+    <div class="github-step">
+      <strong>① 저장소</strong>에서 <code>Settings</code> 탭 클릭
+    </div>
+    <div class="github-step">
+      <strong>② 왼쪽 메뉴</strong>에서 <code>Pages</code> 클릭
+    </div>
+    <div class="github-step">
+      <strong>③ Source 설정:</strong> <code>Deploy from a branch</code> 선택 → Branch: <code>main</code>, Folder: <code>/ (root)</code> → <code>Save</code>
+    </div>
+    <div class="github-step">
+      <strong>④ 1~2분 후</strong> 페이지 상단에 주소가 나타납니다:<br>
+      <code>https://[사용자명].github.io/macro-notes/</code>
+    </div>
+  </div>
+
+  <div class="callout key">
+    <span class="callout-label">✅ 완료! 이렇게 접근하세요</span>
+    <ul style="padding-left:18px; margin:0; line-height:2.2;">
+      <li>📱 <strong>스마트폰</strong>: 크롬 주소창에 위 URL 입력 → 북마크 저장</li>
+      <li>💻 <strong>PC</strong>: 즐겨찾기 저장</li>
+      <li>🏠 <strong>홈화면 추가</strong> (iOS/Android): 공유 → "홈 화면에 추가"</li>
+      <li>🔄 <strong>내용 수정</strong>: 저장소에서 파일 클릭 → 연필 아이콘 → 수정 → Commit</li>
+    </ul>
+  </div>
+
+  <div class="callout note">
+    <span class="callout-label">💡 수정할 때</span>
+    강의가 진행되면서 내용을 추가하려면, GitHub 저장소에서 <code>index.html</code> 파일을 클릭한 후 오른쪽 위 <strong>연필 아이콘(Edit)</strong>을 눌러 직접 수정하거나, 새 파일을 업로드하면 됩니다. 변경사항은 수십 초 내에 웹사이트에 반영됩니다.
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="margin-top:48px; padding:20px 0; border-top:1px solid var(--border); text-align:center; color:var(--ink-faint); font-size:12px; font-family:var(--mono);">
+  Obstfeld / Rogoff — Open Economy Macroeconomics · 강의노트 정리
+</div>
+
+</main>
+</div>
+
+<script>
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.querySelector('.btn-toggle').textContent = isDark ? '◐ 다크모드' : '☀ 라이트모드';
+}
+// Highlight active nav on scroll
+const sections = document.querySelectorAll('[id]');
+const navItems = document.querySelectorAll('.nav-item');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navItems.forEach(n => {
+    n.style.borderLeftColor = n.getAttribute('href') === '#'+current ? 'var(--accent)' : 'transparent';
+    n.style.color = n.getAttribute('href') === '#'+current ? 'var(--accent)' : '';
+  });
+});
+</script>
+</body>
+</html>
